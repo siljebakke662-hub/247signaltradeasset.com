@@ -1,387 +1,546 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>247SignalTradeAsset | Online Trading Platform</title>
+  <title>Admin | 247SignalTradeAsset</title>
 
-  <meta
-    name="description"
-    content="247SignalTradeAsset is an online trading platform providing market information, portfolio tools and trading account services."
-  >
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  <link rel="stylesheet" href="assets/css/style.css">
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #071312;
+      color: #ffffff;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      padding: 25px 18px;
+      background: #040b0a;
+      border-right: 1px solid #18332f;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 35px;
+    }
+
+    .admin-label {
+      color: #42d3a7;
+      font-size: 11px;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+    }
+
+    .menu {
+      display: grid;
+      gap: 7px;
+    }
+
+    .menu a {
+      padding: 13px;
+      border-radius: 8px;
+      color: #8fa39f;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: #102722;
+      color: #ffffff;
+    }
+
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-x: auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+    }
+
+    .topbar h1 {
+      font-size: 30px;
+    }
+
+    .admin-user {
+      padding: 10px 15px;
+      border: 1px solid #24413c;
+      border-radius: 8px;
+      color: #a8bab7;
+      font-size: 13px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 35px;
+    }
+
+    .card {
+      padding: 22px;
+      background: #0b1b19;
+      border: 1px solid #18332f;
+      border-radius: 12px;
+    }
+
+    .card-label {
+      color: #7e928e;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding: 25px;
+      background: #0b1b19;
+      border: 1px solid #18332f;
+      border-radius: 12px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-size: 19px;
+    }
+
+    .view-all {
+      color: #42d3a7;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th,
+    td {
+      padding: 14px 10px;
+      text-align: left;
+      border-bottom: 1px solid #19332f;
+      font-size: 13px;
+    }
+
+    th {
+      color: #71847f;
+      font-weight: 500;
+    }
+
+    td {
+      color: #c4d1ce;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      background: #14362f;
+      color: #62ddb9;
+    }
+
+    .pending {
+      background: #302b15;
+      color: #e5cf69;
+    }
+
+    .danger {
+      background: #351b1b;
+      color: #e98585;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .action {
+      padding: 20px;
+      border: 1px solid #1b3934;
+      border-radius: 10px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .action:hover {
+      background: #102722;
+    }
+
+    .action strong {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .action span {
+      color: #7e928e;
+      font-size: 12px;
+    }
+
+    @media (max-width: 1000px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        width: 70px;
+        padding: 20px 10px;
+      }
+
+      .logo {
+        font-size: 0;
+      }
+
+      .logo::after {
+        content: "247";
+        font-size: 18px;
+      }
+
+      .admin-label,
+      .menu a span {
+        display: none;
+      }
+
+      .main {
+        padding: 20px 15px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        gap: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- NAVIGATION -->
-  <header class="navbar">
+  <div class="layout">
 
-    <a href="index.html" class="logo">
-      247SignalTradeAsset
-    </a>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-    <nav>
-      <a href="#markets">Markets</a>
-      <a href="#features">Features</a>
-      <a href="#security">Security</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="nav-buttons">
-      <a href="login.html" class="login-btn">
-        Log In
-      </a>
-
-      <a href="register.html" class="primary-btn">
-        Open Account
-      </a>
-    </div>
-
-  </header>
-
-
-  <!-- HERO -->
-  <main>
-
-    <section class="hero">
-
-      <div class="hero-content">
-
-        <div class="badge">
-          247SignalTradeAsset
-        </div>
-
-        <h1>
-          Trade global markets
-          <span>from one platform.</span>
-        </h1>
-
-        <p>
-          Access market information, manage your portfolio,
-          monitor orders and manage your trading account through
-          one modern online platform.
-        </p>
-
-        <div class="hero-buttons">
-
-          <a href="register.html" class="primary-btn large">
-            Open an Account
-          </a>
-
-          <a href="#markets" class="secondary-btn large">
-            Explore Markets
-          </a>
-
-        </div>
-
-        <p class="risk-note">
-          Trading financial instruments involves risk and may result
-          in the loss of capital.
-        </p>
-
+      <div class="logo">
+        247SignalTradeAsset
       </div>
 
-    </section>
-
-
-    <!-- MARKETS -->
-    <section id="markets" class="section">
-
-      <div class="section-heading">
-
-        <span>MARKETS</span>
-
-        <h2>
-          Explore global markets
-        </h2>
-
-        <p>
-          Monitor supported financial markets and manage your
-          trading activity from one account.
-        </p>
-
+      <div class="admin-label">
+        ADMIN CONTROL
       </div>
 
+      <nav class="menu">
 
-      <div class="market-grid">
+        <a href="#" class="active">
+          <span>Dashboard</span>
+        </a>
 
-        <div class="market-card">
+        <a href="#">
+          <span>Customers</span>
+        </a>
 
-          <div class="market-icon">
-            FX
-          </div>
+        <a href="#">
+          <span>Deposits</span>
+        </a>
 
-          <h3>
-            Forex
-          </h3>
+        <a href="#">
+          <span>Withdrawals</span>
+        </a>
 
-          <p>
-            Monitor currency markets and supported
-            foreign-exchange instruments.
-          </p>
+        <a href="#">
+          <span>Orders</span>
+        </a>
 
-        </div>
+        <a href="#">
+          <span>Positions</span>
+        </a>
 
+        <a href="#">
+          <span>Fees</span>
+        </a>
 
-        <div class="market-card">
+        <a href="#">
+          <span>Risk Controls</span>
+        </a>
 
-          <div class="market-icon">
-            ₿
-          </div>
+        <a href="#">
+          <span>Audit Logs</span>
+        </a>
 
-          <h3>
-            Digital Assets
-          </h3>
+        <a href="../index.html">
+          <span>Back to Website</span>
+        </a>
 
-          <p>
-            Access information about supported
-            digital-asset markets.
-          </p>
+      </nav>
 
-        </div>
-
-
-        <div class="market-card">
-
-          <div class="market-icon">
-            ST
-          </div>
-
-          <h3>
-            Stocks
-          </h3>
-
-          <p>
-            Monitor supported equity markets and
-            portfolio information.
-          </p>
-
-        </div>
+    </aside>
 
 
-        <div class="market-card">
+    <!-- MAIN -->
+    <main class="main">
 
-          <div class="market-icon">
-            CM
-          </div>
-
-          <h3>
-            Commodities
-          </h3>
-
-          <p>
-            Follow supported commodity markets and
-            market information.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- FEATURES -->
-    <section id="features" class="section dark-section">
-
-      <div class="section-heading">
-
-        <span>PLATFORM</span>
-
-        <h2>
-          Everything in one account
-        </h2>
-
-      </div>
-
-
-      <div class="feature-grid">
-
-        <div class="feature">
-
-          <h3>
-            01 — Trading Dashboard
-          </h3>
-
-          <p>
-            View balances, positions, orders, transactions
-            and account information from one dashboard.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <h3>
-            02 — Order Management
-          </h3>
-
-          <p>
-            Manage supported orders and monitor their status
-            through your trading account.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <h3>
-            03 — Account Funding
-          </h3>
-
-          <p>
-            Account funding and withdrawals can be connected
-            to approved payment and financial-service providers.
-          </p>
-
-        </div>
-
-
-        <div class="feature">
-
-          <h3>
-            04 — Account Security
-          </h3>
-
-          <p>
-            Security features can include authentication,
-            two-factor authentication and account access controls.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- SECURITY -->
-    <section id="security" class="section">
-
-      <div class="security-box">
+      <div class="topbar">
 
         <div>
-
-          <span>
-            SECURITY
-          </span>
-
-          <h2>
-            Security built into the platform.
-          </h2>
-
-          <p>
-            247SignalTradeAsset will use appropriate security,
-            identity-verification, transaction-monitoring and
-            access-control systems as required for the jurisdictions
-            and financial services supported by the platform.
-          </p>
-
+          <h1>Dashboard</h1>
         </div>
 
-
-        <div class="security-list">
-
-          <div>
-            ✓ Secure authentication
-          </div>
-
-          <div>
-            ✓ Two-factor authentication
-          </div>
-
-          <div>
-            ✓ Account access controls
-          </div>
-
-          <div>
-            ✓ Transaction records
-          </div>
-
-          <div>
-            ✓ Audit logging
-          </div>
-
-          <div>
-            ✓ Compliance controls
-          </div>
-
+        <div class="admin-user">
+          Administrator
         </div>
 
       </div>
 
-    </section>
+
+      <!-- STATISTICS -->
+      <section class="cards">
+
+        <div class="card">
+          <div class="card-label">
+            Total Customers
+          </div>
+          <div class="card-value">
+            0
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">
+            Pending Deposits
+          </div>
+          <div class="card-value">
+            0
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">
+            Pending Withdrawals
+          </div>
+          <div class="card-value">
+            0
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label">
+            Trading Volume
+          </div>
+          <div class="card-value">
+            $0.00
+          </div>
+        </div>
+
+      </section>
 
 
-    <!-- CALL TO ACTION -->
-    <section class="cta">
+      <!-- QUICK ACTIONS -->
+      <section class="section">
 
-      <h2>
-        Start your trading journey.
-      </h2>
+        <div class="section-header">
+          <h2>Quick Actions</h2>
+        </div>
 
-      <p>
-        Create your 247SignalTradeAsset account.
-      </p>
+        <div class="quick-actions">
 
-      <a
-        href="register.html"
-        class="primary-btn large"
-      >
-        Open an Account
-      </a>
+          <a href="#" class="action">
+            <strong>Manage Customers</strong>
+            <span>Review customer accounts and status.</span>
+          </a>
 
-    </section>
+          <a href="#" class="action">
+            <strong>Review Deposits</strong>
+            <span>View pending funding transactions.</span>
+          </a>
 
-  </main>
+          <a href="#" class="action">
+            <strong>Review Withdrawals</strong>
+            <span>Review withdrawal requests.</span>
+          </a>
 
+        </div>
 
-  <!-- FOOTER -->
-  <footer id="contact">
-
-    <div class="footer-logo">
-      247SignalTradeAsset
-    </div>
-
-    <p>
-      247SignalTradeAsset is a technology platform.
-      Financial services, products and execution capabilities
-      are subject to applicable regulatory requirements and
-      third-party provider availability.
-    </p>
+      </section>
 
 
-    <div class="footer-links">
+      <!-- RECENT TRANSACTIONS -->
+      <section class="section">
 
-      <a href="legal/terms.html">
-        Terms
-      </a>
+        <div class="section-header">
 
-      <a href="legal/privacy.html">
-        Privacy
-      </a>
+          <h2>
+            Recent Transactions
+          </h2>
 
-      <a href="legal/risk-disclosure.html">
-        Risk Disclosure
-      </a>
+          <a href="#" class="view-all">
+            View all
+          </a>
 
-      <a href="mailto:support@247signaltradeasset.com">
-        Support
-      </a>
-
-    </div>
+        </div>
 
 
-    <p class="copyright">
-      © 2026 247SignalTradeAsset. All rights reserved.
-    </p>
+        <table>
 
-  </footer>
+          <thead>
+
+            <tr>
+              <th>Reference</th>
+              <th>Customer</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>—</td>
+              <td>No transactions</td>
+              <td>—</td>
+              <td>—</td>
+              <td>
+                <span class="status">
+                  Empty
+                </span>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </section>
+
+
+      <!-- RECENT ORDERS -->
+      <section class="section">
+
+        <div class="section-header">
+
+          <h2>
+            Recent Orders
+          </h2>
+
+          <a href="#" class="view-all">
+            View all
+          </a>
+
+        </div>
+
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Order ID</th>
+              <th>Instrument</th>
+              <th>Side</th>
+              <th>Quantity</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>—</td>
+              <td>No orders</td>
+              <td>—</td>
+              <td>—</td>
+              <td>
+                <span class="status">
+                  Empty
+                </span>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </section>
+
+
+      <!-- RISK CONTROLS -->
+      <section class="section">
+
+        <div class="section-header">
+
+          <h2>
+            Risk Controls
+          </h2>
+
+        </div>
+
+        <div class="quick-actions">
+
+          <a href="#" class="action">
+            <strong>Trading Limits</strong>
+            <span>Configure permitted account limits.</span>
+          </a>
+
+          <a href="#" class="action">
+            <strong>Order Limits</strong>
+            <span>Configure maximum supported order sizes.</span>
+          </a>
+
+          <a href="#" class="action">
+            <strong>Instrument Controls</strong>
+            <span>Manage supported trading instruments.</span>
+          </a>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
 
 </body>
 </html>
