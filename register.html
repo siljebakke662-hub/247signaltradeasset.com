@@ -81,6 +81,10 @@
       margin: 3px 0 0;
     }
 
+    .terms label {
+      margin: 0;
+    }
+
     button {
       width: 100%;
       padding: 15px;
@@ -93,6 +97,18 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     .login {
       text-align: center;
       margin-top: 20px;
@@ -100,7 +116,8 @@
       font-size: 14px;
     }
 
-    .login a {
+    .login a,
+    .back {
       color: #42c7b8;
       text-decoration: none;
     }
@@ -110,7 +127,6 @@
       text-align: center;
       margin-top: 18px;
       color: #9eb5b2;
-      text-decoration: none;
       font-size: 14px;
     }
   </style>
@@ -126,7 +142,7 @@
       Open your 247SignalTradeAsset account
     </div>
 
-    <form>
+    <form id="registerForm">
 
       <label for="name">Full name</label>
       <input
@@ -157,6 +173,7 @@
         type="password"
         id="password"
         placeholder="Create a password"
+        minlength="8"
         required
       >
 
@@ -165,6 +182,7 @@
         type="password"
         id="confirm-password"
         placeholder="Confirm your password"
+        minlength="8"
         required
       >
 
@@ -177,9 +195,11 @@
         </label>
       </div>
 
-      <button type="submit">
+      <button type="submit" id="registerButton">
         Create Account
       </button>
+
+      <div class="message" id="message"></div>
 
     </form>
 
@@ -193,6 +213,70 @@
     </a>
 
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "https://azwvrtynqjdkwzwclaae.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+    const button = document.getElementById("registerButton");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword =
+        document.getElementById("confirm-password").value;
+
+      if (password !== confirmPassword) {
+        message.textContent = "Passwords do not match.";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Creating account...";
+      message.textContent = "";
+
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name,
+            phone: phone
+          }
+        }
+      });
+
+      if (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+        button.textContent = "Create Account";
+        return;
+      }
+
+      message.textContent =
+        "Account created. Please check your email to confirm your account.";
+
+      form.reset();
+
+      button.disabled = false;
+      button.textContent = "Create Account";
+    });
+  </script>
 
 </body>
 </html>
